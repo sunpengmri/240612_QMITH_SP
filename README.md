@@ -1,11 +1,15 @@
 # QMITH: MRI-based quantitative measure of  intra-tumoral heterogeneity in breast cancer
 
+### raw version for mac
+### adding support for windows system
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/17007301/219617294-a5f38b07-4599-4834-aa7c-96d01299a531.png" width="600" height="300">
 </p>
 
 
 This repository includes the analysis codes for the paper [MRI-based Quantification of Intratumoral Heterogeneity for Predicting Treatment Response to Neoadjuvant Chemotherapy in Breast Cancerr](https://pubs.rsna.org/doi/10.1148/radiol.222830) published in Radiology. We are working hard to make the processing workflow automatically. The stable version is comming soon. Please wait with more patience.
+
 
 ### License
 

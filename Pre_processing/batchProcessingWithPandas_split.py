@@ -104,24 +104,30 @@ def main(inputCSV,outputFilepath,params):
       featureVector = flists[entry]  # This is a pandas Series
       featureVector['Image'] = os.path.basename(imageFilepath)
       featureVector['Mask'] = os.path.basename(maskFilepath)
-
       try:
         # PyRadiomics returns the result as an ordered dictionary, which can be easily converted to a pandas Series
         # The keys in the dictionary will be used as the index (labels for the rows), with the values of the features
         # as the values in the rows.
         result = pandas.Series(extractor.execute(imageFilepath, maskFilepath, label))
-        featureVector = featureVector.append(result)
+        # featureVector = featureVector.append(result)
+        featureVector=pandas.concat([featureVector,result], ignore_index=False)
+        # print(featureVector)
+
       except Exception:
         logger.error('FEATURE EXTRACTION FAILED:', exc_info=True)
 
       # To add the calculated features for this case to our data frame, the series must have a name (which will be the
       # name of the column.
       featureVector.name = entry
+      # print(featureVector.name)
       # By specifying an 'outer' join, all calculated features are added to the data frame, including those not
       # calculated for previous cases. This also ensures we don't end up with an empty frame, as for the first patient
       # it is 'joined' with the empty data frame.
       results = results.join(featureVector, how='outer')  # If feature extraction failed, results will be all NaN
-
+  
+  # print((result.index))
+  # print(featureVector.index)
+  # featureVector.index = result.index
   logger.info('Extraction complete, writing CSV')
   # .T transposes the data frame, so that each line will represent one patient, with the extracted features as columns
   results.T.to_csv(outputFilepath, index=False, na_rep='NaN')
@@ -130,7 +136,9 @@ def main(inputCSV,outputFilepath,params):
 
 if __name__ == '__main__':
 
-  outPath = '../output/'
+  outPath = r'D:\03_AIDataSet\00_Radiomics\Dataset\QMITH\output'
+
+  
   CaseTablePath = 'CaseTable'
   RFPath = 'RF'
   params = os.path.join('../Radiomics_Settings', 'exampleMR_1mm_SV.yaml')
@@ -140,7 +148,7 @@ if __name__ == '__main__':
   files_casetable = glob.glob(os.path.join(outPath,CaseTablePath,'*.csv'))
 
   for casetable in files_casetable:
-    file_name = casetable.split('/')[-1].replace('CaseTable','RF')
+    file_name = casetable.split('\\')[-1].replace('CaseTable','RF')
     outputFilepath = os.path.join(outPath, RFPath, file_name)
     main(casetable,outputFilepath,params)
 
