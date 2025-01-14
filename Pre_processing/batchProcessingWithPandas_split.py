@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-
+import platform
 import logging
 import os
 
@@ -52,7 +52,7 @@ def main(inputCSV,outputFilepath,params):
   logger.info('Loading CSV')
 
   # ####### Up to this point, this script is equal to the 'regular' batchprocessing script ########
-
+  
   try:
     # Use pandas to read and transpose ('.T') the input data
     # The transposition is needed so that each column represents one test case. This is easier for iteration over
@@ -135,21 +135,26 @@ def main(inputCSV,outputFilepath,params):
 
 
 if __name__ == '__main__':
-
-  outPath = r'D:\03_AIDataSet\00_Radiomics\Dataset\QMITH\output'
-
   
+  if platform.system() == 'Windows':
+    separator = '\\'
+  else:
+    separator = '/'
+
+  outPath = r'/media/peng/data/02_radiomics/chenquan/new3/radiomics/output'
+
   CaseTablePath = 'CaseTable'
   RFPath = 'RF'
   params = os.path.join('../Radiomics_Settings', 'exampleMR_1mm_SV.yaml')
 
-  inputCSV = os.path.join(outPath, CaseTablePath,'CaseTable.csv')
+  # inputCSV = os.path.join(outPath, CaseTablePath,'CaseTable.csv')
 
   files_casetable = glob.glob(os.path.join(outPath,CaseTablePath,'*.csv'))
 
   for casetable in files_casetable:
-    file_name = casetable.split('\\')[-1].replace('CaseTable','RF')
+    file_name = casetable.split(separator)[-1].replace('CaseTable','RF')
     outputFilepath = os.path.join(outPath, RFPath, file_name)
+    
     main(casetable,outputFilepath,params)
 
 
